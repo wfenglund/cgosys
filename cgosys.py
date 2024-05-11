@@ -28,6 +28,6 @@ while True:
         try:
             chosen_game = roms['gba'][int(choice)]
             print(f'Starting {chosen_game}...\n')
-            subprocess.run(['mgba', f'{gba_roms_path}{chosen_game}'])
+            subprocess.run(['vbam', '-c', 'custom_vbam.cfg', f'{gba_roms_path}{chosen_game}'])
         except (IndexError, ValueError) as error:
             print(f'- Index does not exist, try another one.\n')
