@@ -15,6 +15,15 @@ def print_games(game_dict):
             print(f'[{roms[i].index(j)}] {j}')
         print()
 
+device = 'PowerA'
+# device = 'keyboard'
+
+config_dict = {}
+config_dict['PowerA'] = 'powera_vbam.cfg'
+config_dict['keyboard'] = 'keyboard_vbam.cfg'
+
+device_config = config_dict[device]
+
 gba_roms_path = './gba_roms/'
 roms = detect_games(gba_roms_path)
 
@@ -28,6 +37,6 @@ while True:
         try:
             chosen_game = roms['gba'][int(choice)]
             print(f'Starting {chosen_game}...\n')
-            subprocess.run(['vbam', '-c', 'custom_vbam.cfg', f'{gba_roms_path}{chosen_game}'])
+            subprocess.run(['vbam', '-c', device_config, f'{gba_roms_path}{chosen_game}'])
         except (IndexError, ValueError) as error:
             print(f'- Index does not exist, try another one.\n')
