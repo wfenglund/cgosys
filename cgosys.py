@@ -7,10 +7,16 @@ import curses
 pygame.init()
 controllers = [pygame.joystick.Joystick(i) for i in range(pygame.joystick.get_count())]
 
+def detect_games(rom_path, game_type, ending):
+    file_list = os.listdir(rom_path)
+    game_dict = {}
+    game_dict[game_type] = [i for i in file_list if i.endswith(ending)]
+    return game_dict
+
 def get_contr_press():
     if len(controllers) > 0:
         controllers[0].init()
-        button_dict = {12:258, 11:259, 0:10}
+        button_dict = {12:258, 11:259, 0:10, 7:7}
         events = pygame.event.get()
         if len(events) > 0:
             for press in events:
@@ -20,24 +26,6 @@ def get_contr_press():
                     controllers[0].quit()
                     return button
     return ''
-
-def detect_games(rom_path, game_type, ending):
-    file_list = os.listdir(rom_path)
-    game_dict = {}
-    game_dict[game_type] = [i for i in file_list if i.endswith(ending)]
-    return game_dict
-
-device = 'PowerA'
-# device = 'keyboard'
-
-config_dict = {}
-config_dict['PowerA'] = 'powera_vbam.cfg'
-config_dict['keyboard'] = 'keyboard_vbam.cfg'
-
-device_config = config_dict[device]
-
-gba_roms_path = './gba_roms/'
-roms = detect_games(gba_roms_path, 'gba', '.gba')
 
 def cgosys_menu(stdscr):
     stdscr.nodelay(True)
@@ -78,4 +66,18 @@ def cgosys_menu(stdscr):
             subprocess.run(['vbam', '-c', device_config, f'{gba_roms_path}{choice}'], stdout = devnull, stderr = devnull)
             print(' ' * len(message), end = '\r')
 
+device = 'PowerA'
+# device = 'keyboard'
+
+config_dict = {}
+config_dict['PowerA'] = 'powera_vbam.cfg'
+config_dict['keyboard'] = 'keyboard_vbam.cfg'
+
+device_config = config_dict[device]
+
+gba_roms_path = './gba_roms/'
+roms = detect_games(gba_roms_path, 'gba', '.gba')
+
+kill_proc = subprocess.Popen(['python3', './kill_process.py'])
 curses.wrapper(cgosys_menu)
+kill_proc.kill()
