@@ -31,6 +31,7 @@ $ cd cgosys
 ```
 
 ## Running
+Put all of your roms in their appropriate folders (`gba_roms` is the only one at the moment) and run:
 ```bash
 $ python cgosys.py
 ```
