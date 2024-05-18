@@ -12,9 +12,8 @@ controllers = [pygame.joystick.Joystick(i) for i in range(pygame.joystick.get_co
 ### Functions:
 def detect_games(rom_path, game_type, ending):
     file_list = os.listdir(rom_path)
-    game_dict = {}
-    game_dict[game_type] = [i for i in file_list if i.endswith(ending)]
-    return game_dict
+    game_list = [i for i in file_list if i.endswith(ending)]
+    return game_list
 
 def get_contr_press():
     if len(controllers) > 0:
@@ -40,7 +39,61 @@ def cgosys_menu(stdscr):
     while True:
         character = 0  # last character read
         option = 0  # the current option that is marked
-        choices = roms['gba'] + ['Quit']
+        choices = list(console_dict.keys()) + ['Quit']
+        while character != 10: # while Enter has not been pressed
+            stdscr.erase()
+            # Add menu title:
+            title_str = "Select console:\n"
+            title_y = 1
+            title_x = (curses.COLS // 2) - (len(title_str) // 2)
+            stdscr.addstr(title_y, title_x, title_str, curses.A_UNDERLINE)
+            # Add menu options:
+            line_n = 2
+            for i in range(len(choices)):
+                extra_space = 0
+                cur_opt = choices[i]
+                if i == option:
+                    attr = attributes['highlighted']
+                else:
+                    attr = attributes['normal']
+                option_x = (curses.COLS // 2) - (30 // 2)
+                if len(cur_opt) > 30:
+                    cur_opt = cur_opt[0:30] + '\n' + ' '*option_x + cur_opt[30:] + ' '*(30 - len(cur_opt[30:]))
+                    extra_space = 1
+                else:
+                    cur_opt = cur_opt + ' '*(30 - len(cur_opt))
+                cur_opt = ' '*option_x + cur_opt
+                stdscr.addstr(line_n, 0, cur_opt + '\n', attr)
+                line_n = line_n + 1 + extra_space
+            # Get user input:
+            character = stdscr.getch()
+            if character == -1: # if no key was pressed
+                joypress = get_contr_press()
+                if joypress != '': # if controller has been pressed
+                    character = joypress
+            if character == curses.KEY_UP and option > 0:
+                option -= 1
+            elif character == curses.KEY_DOWN and option < len(choices) - 1:
+                option += 1
+        choice = choices[option] # get menu choice
+        if choice == 'Quit':
+            break
+        else:
+            console_info = console_dict[choice]
+            return curses.wrapper(cgosys_console, console_info)
+
+def cgosys_console(stdscr, console_info):
+    stdscr.nodelay(True) # do not wait for .getch()
+    roms = detect_games(console_info[0], console_info[1], console_info[2])
+    attributes = {}
+    curses.init_pair(1, curses.COLOR_WHITE, curses.COLOR_BLACK)
+    curses.init_pair(2, curses.COLOR_BLACK, curses.COLOR_WHITE)
+    attributes['normal'] = curses.color_pair(1)
+    attributes['highlighted'] = curses.color_pair(2)
+    while True:
+        character = 0  # last character read
+        option = 0  # the current option that is marked
+        choices = roms + ['Quit']
         while character != 10: # while Enter has not been pressed
             stdscr.erase()
             # Add menu title:
@@ -78,12 +131,13 @@ def cgosys_menu(stdscr):
                 option += 1
         choice = choices[option] # get menu choice
         if choice == 'Quit':
-            break
+            option = 0
+            return curses.wrapper(cgosys_menu)
         else:
             message = f'Running {choice}...'
             print(message, end = '\r')
             devnull = subprocess.DEVNULL
-            subprocess.run(['vbam', '-c', device_config, f'{gba_roms_path}{choice}'], stdout = devnull, stderr = devnull)
+            subprocess.run(['vbam', '-c', device_config, f'{console_info[0]}{choice}'], stdout = devnull, stderr = devnull)
             print(' ' * len(message), end = '\r') # clean away message
 
 ### Determine VBAM settings:
@@ -97,8 +151,8 @@ config_dict['keyboard'] = 'keyboard_vbam.cfg'
 device_config = config_dict[device]
 
 ### Detect GBA games:
-gba_roms_path = './gba_roms/'
-roms = detect_games(gba_roms_path, 'gba', '.gba')
+console_dict = {}
+console_dict['Gameboy Advance'] = ['./gba_roms/', 'gba', '.gba']
 
 ### Spawn subprocess for quitting VBAM from within, and start cgosys menu:
 kill_proc = subprocess.Popen(['python3', './kill_process.py'])
