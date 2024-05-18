@@ -5,7 +5,7 @@ import pygame
 import subprocess
 import curses
 
-## Initiate pygame and find controllers:
+### Initiate pygame and find controllers:
 pygame.init()
 controllers = [pygame.joystick.Joystick(i) for i in range(pygame.joystick.get_count())]
 
