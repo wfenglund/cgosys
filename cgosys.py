@@ -39,7 +39,7 @@ def cgosys_menu(stdscr):
     while True:
         character = 0  # last character read
         option = 0  # the current option that is marked
-        choices = ['Gameboy Advance', 'Quit']
+        choices = list(console_dict.keys()) + ['Quit']
         while character != 10: # while Enter has not been pressed
             stdscr.erase()
             # Add menu title:
