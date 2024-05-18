@@ -5,7 +5,7 @@ import pygame
 import subprocess
 import curses
 
-### Initiate pygame find controllers:
+### Initiate pygame and find controllers:
 pygame.init()
 controllers = [pygame.joystick.Joystick(i) for i in range(pygame.joystick.get_count())]
 
@@ -31,7 +31,7 @@ def get_contr_press():
     return ''
 
 def cgosys_menu(stdscr):
-    stdscr.nodelay(True) # do not for .getch()
+    stdscr.nodelay(True) # do not wait for .getch()
     attributes = {}
     curses.init_pair(1, curses.COLOR_WHITE, curses.COLOR_BLACK)
     curses.init_pair(2, curses.COLOR_BLACK, curses.COLOR_WHITE)
@@ -43,13 +43,30 @@ def cgosys_menu(stdscr):
         choices = roms['gba'] + ['Quit']
         while character != 10: # while Enter has not been pressed
             stdscr.erase()
-            stdscr.addstr("Select game to play:\n", curses.A_UNDERLINE)
-            for i in range(len(choices)): # paint menu choices
+            # Add menu title:
+            title_str = "Select game to play:\n"
+            title_y = 1
+            title_x = (curses.COLS // 2) - (len(title_str) // 2)
+            stdscr.addstr(title_y, title_x, title_str, curses.A_UNDERLINE)
+            # Add menu options:
+            line_n = 2
+            for i in range(len(choices)):
+                extra_space = 0
+                cur_opt = choices[i]
                 if i == option:
                     attr = attributes['highlighted']
                 else:
                     attr = attributes['normal']
-                stdscr.addstr(choices[i] + '\n', attr)
+                option_x = (curses.COLS // 2) - (30 // 2)
+                if len(cur_opt) > 30:
+                    cur_opt = cur_opt[0:30] + '\n' + ' '*option_x + cur_opt[30:] + ' '*(30 - len(cur_opt[30:]))
+                    extra_space = 1
+                else:
+                    cur_opt = cur_opt + ' '*(30 - len(cur_opt))
+                cur_opt = ' '*option_x + cur_opt
+                stdscr.addstr(line_n, 0, cur_opt + '\n', attr)
+                line_n = line_n + 1 + extra_space
+            # Get user input:
             character = stdscr.getch()
             if character == -1: # if no key was pressed
                 joypress = get_contr_press()
@@ -67,7 +84,7 @@ def cgosys_menu(stdscr):
             print(message, end = '\r')
             devnull = subprocess.DEVNULL
             subprocess.run(['vbam', '-c', device_config, f'{gba_roms_path}{choice}'], stdout = devnull, stderr = devnull)
-            print(' ' * len(message), end = '\r') # clean avay message
+            print(' ' * len(message), end = '\r') # clean away message
 
 ### Determine VBAM settings:
 device = 'PowerA'
