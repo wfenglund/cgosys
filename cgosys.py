@@ -16,18 +16,18 @@ def detect_games(rom_path, game_type, ending):
     return game_list
 
 def get_contr_press():
-    if len(controllers) > 0:
-        controllers[0].init()
-        button_dict = {12:258, 11:259, 0:10, 7:7}
-        events = pygame.event.get()
-        if len(events) > 0:
-            for press in events:
-                if 'button' in press.dict.keys():
-                    button = press.dict['button']
-                    button = button_dict[button] if button in button_dict.keys() else ''
-                    controllers[0].quit()
-                    return button
-    return ''
+        if len(controllers) > 0:
+            controllers[0].init()
+            button_dict = {12:258, 11:259, 0:10, 7:7}
+            events = pygame.event.get()
+            if len(events) > 0:
+                for press in events:
+                    if 'button' in press.dict.keys():
+                        button = press.dict['button']
+                        button = button_dict[button] if button in button_dict.keys() else ''
+                        controllers[0].quit()
+                        return button
+        return ''
 
 def cgosys_menu(stdscr):
     stdscr.nodelay(True) # do not wait for .getch()
@@ -153,6 +153,8 @@ device_config = config_dict[device]
 ### Detect GBA games:
 console_dict = {}
 console_dict['Gameboy Advance'] = ['./gba_roms/', 'gba', '.gba']
+console_dict['Gameboy Color'] = ['./gbc_roms/', 'gbc', '.gbc']
+console_dict['Gameboy Original'] = ['./gb_roms/', 'gb', '.gb']
 
 ### Spawn subprocess for quitting VBAM from within, and start cgosys menu:
 kill_proc = subprocess.Popen(['python3', './kill_process.py'])
