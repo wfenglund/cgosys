@@ -152,9 +152,9 @@ device_config = config_dict[device]
 
 ### Detect GBA games:
 console_dict = {}
-console_dict['Gameboy Advance'] = ['./gba_roms/', 'gba', '.gba']
-console_dict['Gameboy Color'] = ['./gbc_roms/', 'gbc', '.gbc']
 console_dict['Gameboy Original'] = ['./gb_roms/', 'gb', '.gb']
+console_dict['Gameboy Color'] = ['./gbc_roms/', 'gbc', '.gbc']
+console_dict['Gameboy Advance'] = ['./gba_roms/', 'gba', '.gba']
 
 ### Spawn subprocess for quitting VBAM from within, and start cgosys menu:
 kill_proc = subprocess.Popen(['python3', './kill_process.py'])
