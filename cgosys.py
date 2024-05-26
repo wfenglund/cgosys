@@ -10,6 +10,18 @@ pygame.init()
 controllers = [pygame.joystick.Joystick(i) for i in range(pygame.joystick.get_count())]
 
 ### Functions:
+def title_prompt():
+    print('  _______   ______    ______    _______  __    __   _______ ')
+    print(' /       | /      \  /      \  /       |/  |  /  | /       |')
+    print('/$$$$$$$/ /$$$$$$  |/$$$$$$  |/$$$$$$$/ $$ |  $$ |/$$$$$$$/ ')
+    print('$$ |      $$ |  $$ |$$ |  $$ |$$      \ $$ |  $$ |$$      \ ')
+    print('$$ \_____ $$ \__$$ |$$ \__$$ | $$$$$$  |$$ \__$$ | $$$$$$  |')
+    print('$$       |$$    $$ |$$    $$/ /     $$/ $$    $$ |/     $$/ ')
+    print(' $$$$$$$/  $$$$$$$ | $$$$$$/  $$$$$$$/   $$$$$$$ |$$$$$$$/  ')
+    print('          /  \__$$ |                    /  \__$$ |          ')
+    print('          $$    $$/                     $$    $$/           ')
+    print('           $$$$$$/                       $$$$$$/            ')
+
 def detect_games(rom_path, ending):
     if os.path.isdir(rom_path):
         file_list = os.listdir(rom_path)
@@ -162,7 +174,7 @@ console_dict = {}
 console_dict['Gameboy Original'] = [location + '/Rom_files/gb_roms/', '.gb']
 console_dict['Gameboy Color'] = [location + '/Rom_files/gbc_roms/', '.gbc']
 console_dict['Gameboy Advance'] = [location + '/Rom_files/gba_roms/', '.gba']
-
+title_prompt()
 ### Spawn subprocess for quitting VBAM from within, and start cgosys menu:
 kill_proc = subprocess.Popen(['python3', './kill_process.py'])
 curses.wrapper(cgosys_menu)
