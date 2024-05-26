@@ -10,8 +10,11 @@ pygame.init()
 controllers = [pygame.joystick.Joystick(i) for i in range(pygame.joystick.get_count())]
 
 ### Functions:
-def detect_games(rom_path, game_type, ending):
-    file_list = os.listdir(rom_path)
+def detect_games(rom_path, ending):
+    if os.path.isdir(rom_path):
+        file_list = os.listdir(rom_path)
+    else:
+        file_list = []
     game_list = [i for i in file_list if i.endswith(ending)]
     return game_list
 
@@ -84,7 +87,7 @@ def cgosys_menu(stdscr):
 
 def cgosys_console(stdscr, console_info):
     stdscr.nodelay(True) # do not wait for .getch()
-    roms = detect_games(console_info[0], console_info[1], console_info[2])
+    roms = detect_games(console_info[0], console_info[1])
     attributes = {}
     curses.init_pair(1, curses.COLOR_WHITE, curses.COLOR_BLACK)
     curses.init_pair(2, curses.COLOR_BLACK, curses.COLOR_WHITE)
@@ -151,10 +154,14 @@ config_dict['keyboard'] = 'keyboard_vbam.cfg'
 device_config = config_dict[device]
 
 ### Detect GBA games:
+if os.path.isdir(os.getenv("HOME") + '/Rom_files'):
+    location = os.getenv("HOME")
+else:
+    location = '.'
 console_dict = {}
-console_dict['Gameboy Original'] = ['./Rom_files/gb_roms/', 'gb', '.gb']
-console_dict['Gameboy Color'] = ['./Rom_files/gbc_roms/', 'gbc', '.gbc']
-console_dict['Gameboy Advance'] = ['./Rom_files/gba_roms/', 'gba', '.gba']
+console_dict['Gameboy Original'] = [location + '/Rom_files/gb_roms/', '.gb']
+console_dict['Gameboy Color'] = [location + '/Rom_files/gbc_roms/', '.gbc']
+console_dict['Gameboy Advance'] = [location + '/Rom_files/gba_roms/', '.gba']
 
 ### Spawn subprocess for quitting VBAM from within, and start cgosys menu:
 kill_proc = subprocess.Popen(['python3', './kill_process.py'])
