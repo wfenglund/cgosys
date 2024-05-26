@@ -10,17 +10,18 @@ pygame.init()
 controllers = [pygame.joystick.Joystick(i) for i in range(pygame.joystick.get_count())]
 
 ### Functions:
-def title_prompt():
-    print('  _______   ______    ______    _______  __    __   _______ ')
-    print(' /       | /      \  /      \  /       |/  |  /  | /       |')
-    print('/$$$$$$$/ /$$$$$$  |/$$$$$$  |/$$$$$$$/ $$ |  $$ |/$$$$$$$/ ')
-    print('$$ |      $$ |  $$ |$$ |  $$ |$$      \ $$ |  $$ |$$      \ ')
-    print('$$ \_____ $$ \__$$ |$$ \__$$ | $$$$$$  |$$ \__$$ | $$$$$$  |')
-    print('$$       |$$    $$ |$$    $$/ /     $$/ $$    $$ |/     $$/ ')
-    print(' $$$$$$$/  $$$$$$$ | $$$$$$/  $$$$$$$/   $$$$$$$ |$$$$$$$/  ')
-    print('          /  \__$$ |                    /  \__$$ |          ')
-    print('          $$    $$/                     $$    $$/           ')
-    print('           $$$$$$/                       $$$$$$/            ')
+def title_prompt(stdscr):
+    prompt_x = (curses.COLS // 2) - (60 // 2)
+    stdscr.addstr(0, prompt_x, r" ________  ________  ________  ________  __    __  ________ ")
+    stdscr.addstr(1, prompt_x, r"/       /|/       /|/       /|/       /|/ /|  / /|/       /|")
+    stdscr.addstr(2, prompt_x, r"$$$$$$$$/ $$$$$$$$ |$$$$$$$$ |$$$$$$$$/ $$ |  $$ |$$$$$$$$/ ")
+    stdscr.addstr(3, prompt_x, r"$$ |      $$ |  $$ |$$ |  $$ |$$/     /|$$ |  $$ |$$/     /|")
+    stdscr.addstr(4, prompt_x, r"$$ |_____ $$ |__$$ |$$ |__$$ |$$$$$$$$ |$$ |__$$ |$$$$$$$$ |")
+    stdscr.addstr(5, prompt_x, r"$$/     /|$$/   $$ |$$/   $$ |/     $$ |$$/   $$ |/     $$ |")
+    stdscr.addstr(6, prompt_x, r"$$$$$$$$/ $$$$$$$$ |$$$$$$$$/ $$$$$$$$/ $$$$$$$$ |$$$$$$$$/ ")
+    stdscr.addstr(7, prompt_x, r"          / /|__$$ |                    / /|__$$ |          ")
+    stdscr.addstr(8, prompt_x, r"          $$/   $$ |   casual  gaming   $$/   $$ |          ")
+    stdscr.addstr(9, prompt_x, r"          $$$$$$$$/   operating system  $$$$$$$$/          ")
 
 def detect_games(rom_path, ending):
     if os.path.isdir(rom_path):
@@ -57,13 +58,14 @@ def cgosys_menu(stdscr):
         choices = list(console_dict.keys()) + ['Quit']
         while character != 10: # while Enter has not been pressed
             stdscr.erase()
-            # Add menu title:
-            title_str = "Select console:\n"
-            title_y = 1
+            # Add prompt and menu title:
+            title_prompt(stdscr)
+            title_str = "SELECT CONSOLE\n"
+            title_y = 11
             title_x = (curses.COLS // 2) - (len(title_str) // 2)
             stdscr.addstr(title_y, title_x, title_str, curses.A_UNDERLINE)
             # Add menu options:
-            line_n = 2
+            line_n = title_y + 2
             for i in range(len(choices)):
                 extra_space = 0
                 cur_opt = choices[i]
@@ -111,13 +113,14 @@ def cgosys_console(stdscr, console_info):
         choices = roms + ['Quit']
         while character != 10: # while Enter has not been pressed
             stdscr.erase()
-            # Add menu title:
-            title_str = "Select game to play:\n"
-            title_y = 1
+            # Add prompt and menu title:
+            title_prompt(stdscr)
+            title_str = "SELECT ROM\n"
+            title_y = 11
             title_x = (curses.COLS // 2) - (len(title_str) // 2)
             stdscr.addstr(title_y, title_x, title_str, curses.A_UNDERLINE)
             # Add menu options:
-            line_n = 2
+            line_n = title_y + 2
             for i in range(len(choices)):
                 extra_space = 0
                 cur_opt = choices[i]
@@ -174,7 +177,7 @@ console_dict = {}
 console_dict['Gameboy Original'] = [location + '/Rom_files/gb_roms/', '.gb']
 console_dict['Gameboy Color'] = [location + '/Rom_files/gbc_roms/', '.gbc']
 console_dict['Gameboy Advance'] = [location + '/Rom_files/gba_roms/', '.gba']
-title_prompt()
+
 ### Spawn subprocess for quitting VBAM from within, and start cgosys menu:
 kill_proc = subprocess.Popen(['python3', './kill_process.py'])
 curses.wrapper(cgosys_menu)
