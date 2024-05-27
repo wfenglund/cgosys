@@ -30,8 +30,15 @@ $ git clone https://github.com/wfenglund/cgosys
 $ cd cgosys
 ```
 
+#### Preparations (optional):
+It could be a good idea to store your roms in your home folder. From within the `cgosys/` folder (if `~/Rom_files` exists it will be used by cgosys):
+```bash
+$ cp Rom_files/ ~/
+```
+Then add your roms to the various sub folders of `~/Rom_files`.
+
 ## Running
-Put all of your roms in their appropriate folders (`gba_roms` is the only one at the moment) and run:
+When you have your roms in their appropriate console sub folders in either `Rom_files` within the cloned repository or in `~/Rom_files`, you can run:
 ```bash
 $ python cgosys.py
 ```
