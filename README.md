@@ -42,3 +42,7 @@ When you have your roms in their appropriate console sub folders in either `Rom_
 ```bash
 $ python cgosys.py
 ```
+If you get annoying warnings from pygame that you don't want to see you can instead run:
+```bash
+python cgosys.py 2> /dev/null
+```
