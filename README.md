@@ -1,6 +1,6 @@
 # CGOSYS
 
-The Casual Gaming Operating SYStem is a retro gaming environment written in Python3. It is effectively a wrapper for emulators to make playing more convenient for the player. The idea is to run the program on top of gnu/linux on something like a Raspberry Pi to make it function like a gaming console.
+The Casual Gaming Operating SYStem is a retro gaming environment written in Python3. It is effectively a wrapper for emulators to make playing more convenient for the player. The idea is to run the program on top of GNU/Linux on something like a Raspberry Pi to make it function like a gaming console.
 
 ## Current support
 ### Consoles
