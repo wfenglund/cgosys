@@ -4,6 +4,7 @@ os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1' # to make pygame import silent
 import pygame
 import subprocess
 import curses
+import re
 
 ### Initiate pygame and find controllers:
 pygame.init()
@@ -67,21 +68,19 @@ def cgosys_menu(stdscr):
             # Add menu options:
             line_n = title_y + 2
             for i in range(len(choices)):
-                extra_space = 0
+                col_w = 30
                 cur_opt = choices[i]
                 if i == option:
                     attr = attributes['highlighted']
                 else:
                     attr = attributes['normal']
-                option_x = (curses.COLS // 2) - (30 // 2)
-                if len(cur_opt) > 30:
-                    cur_opt = cur_opt[0:30] + '\n' + ' '*option_x + cur_opt[30:] + ' '*(30 - len(cur_opt[30:]))
-                    extra_space = 1
-                else:
-                    cur_opt = cur_opt + ' '*(30 - len(cur_opt))
-                cur_opt = ' '*option_x + cur_opt
-                stdscr.addstr(line_n, 0, cur_opt + '\n', attr)
-                line_n = line_n + 1 + extra_space
+                option_x = (curses.COLS // 2) - (col_w // 2)
+                opt_list = re.findall('.{1,' + str(col_w) + '}', cur_opt)
+                for chunk in opt_list:
+                    nchar = len(chunk)
+                    chunk = chunk if nchar == col_w else chunk + ' '*(col_w - nchar)
+                    stdscr.addstr(line_n, option_x, chunk + '\n', attr)
+                    line_n = line_n + 1
             # Get user input:
             character = stdscr.getch()
             if character == -1: # if no key was pressed
@@ -122,21 +121,19 @@ def cgosys_console(stdscr, console_info):
             # Add menu options:
             line_n = title_y + 2
             for i in range(len(choices)):
-                extra_space = 0
+                col_w = 36
                 cur_opt = choices[i]
                 if i == option:
                     attr = attributes['highlighted']
                 else:
                     attr = attributes['normal']
-                option_x = (curses.COLS // 2) - (30 // 2)
-                if len(cur_opt) > 30:
-                    cur_opt = cur_opt[0:30] + '\n' + ' '*option_x + cur_opt[30:] + ' '*(30 - len(cur_opt[30:]))
-                    extra_space = 1
-                else:
-                    cur_opt = cur_opt + ' '*(30 - len(cur_opt))
-                cur_opt = ' '*option_x + cur_opt
-                stdscr.addstr(line_n, 0, cur_opt + '\n', attr)
-                line_n = line_n + 1 + extra_space
+                option_x = (curses.COLS // 2) - (col_w // 2)
+                opt_list = re.findall('.{1,' + str(col_w) + '}', cur_opt)
+                for chunk in opt_list:
+                    nchar = len(chunk)
+                    chunk = chunk if nchar == col_w else chunk + ' '*(col_w - nchar)
+                    stdscr.addstr(line_n, option_x, chunk + '\n', attr)
+                    line_n = line_n + 1
             # Get user input:
             character = stdscr.getch()
             if character == -1: # if no key was pressed
