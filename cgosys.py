@@ -2,6 +2,7 @@
 import os
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1' # to make pygame import silent
 import pygame
+import time
 import subprocess
 import curses
 import re
@@ -33,18 +34,21 @@ def detect_games(rom_path, ending):
     return game_list
 
 def get_contr_press():
-        if len(controllers) > 0:
-            controllers[0].init()
-            button_dict = {12:258, 11:259, 0:10, 7:7}
-            events = pygame.event.get()
-            if len(events) > 0:
-                for press in events:
-                    if 'button' in press.dict.keys():
-                        button = press.dict['button']
-                        button = button_dict[button] if button in button_dict.keys() else ''
-                        controllers[0].quit()
-                        return button
-        return ''
+    press = ''
+    if len(controllers) > 0:
+        controllers[0].init()
+        button_dict = {12:258, 11:259, 0:10, 2:10, 7:7, (0, -1):258, (0, 1):259}
+        events = pygame.event.get()
+        if len(events) > 0:
+            for entry in events:
+                if 'button' in entry.dict.keys():
+                    press = entry.dict['button']
+                if 'hat' in entry.dict.keys():
+                    press = entry.dict['value']
+                press = button_dict[press] if press in button_dict.keys() else ''
+                time.sleep(0.15)
+        controllers[0].quit()
+    return press
 
 def cgosys_menu(stdscr):
     stdscr.nodelay(True) # do not wait for .getch()
@@ -156,11 +160,13 @@ def cgosys_console(stdscr, console_info):
             print(' ' * len(message), end = '\r') # clean away message
 
 ### Determine VBAM settings:
-device = 'PowerA'
+device = 'PowerA_1'
+device = 'PowerA_2'
 # device = 'keyboard'
 
 config_dict = {}
-config_dict['PowerA'] = 'powera_vbam.cfg'
+config_dict['PowerA_1'] = 'powera_vbam.cfg'
+config_dict['PowerA_2'] = 'powera_vbam_2.cfg'
 config_dict['keyboard'] = 'keyboard_vbam.cfg'
 
 device_config = config_dict[device]
