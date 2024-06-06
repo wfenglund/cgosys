@@ -182,7 +182,8 @@ console_dict['Gameboy Color'] = [location + '/Rom_files/gbc_roms/', '.gbc']
 console_dict['Gameboy Advance'] = [location + '/Rom_files/gba_roms/', '.gba']
 
 ### Spawn subprocess for quitting VBAM from within, and start cgosys menu:
+kill_script = os.path.dirname(__file__) + '/kill_process.py'
 kill_button = str(config_dict[device][1])
-kill_proc = subprocess.Popen(['python3', './kill_process.py', kill_button])
+kill_proc = subprocess.Popen(['python3', kill_script, kill_button])
 curses.wrapper(cgosys_menu)
 kill_proc.kill()
