@@ -7,6 +7,9 @@ import subprocess
 import curses
 import re
 
+### Find cgosys path:
+cgosys_path = os.path.dirname(__file__)
+
 ### Initiate pygame and find controllers:
 pygame.init()
 controllers = [pygame.joystick.Joystick(i) for i in range(pygame.joystick.get_count())]
@@ -165,9 +168,9 @@ device = 'PowerA_2'
 # device = 'keyboard'
 
 config_dict = {}
-config_dict['PowerA_1'] = ['powera_vbam.cfg', 7]
-config_dict['PowerA_2'] = ['powera_vbam_2.cfg', 10]
-config_dict['keyboard'] = ['keyboard_vbam.cfg', 1000]
+config_dict['PowerA_1'] = [cgosys_path + '/powera_vbam.cfg', 7]
+config_dict['PowerA_2'] = [cgosys_path + '/powera_vbam_2.cfg', 10]
+config_dict['keyboard'] = [cgosys_path + '/keyboard_vbam.cfg', 1000]
 
 device_config = config_dict[device][0]
 
@@ -182,7 +185,7 @@ console_dict['Gameboy Color'] = [location + '/Rom_files/gbc_roms/', '.gbc']
 console_dict['Gameboy Advance'] = [location + '/Rom_files/gba_roms/', '.gba']
 
 ### Spawn subprocess for quitting VBAM from within, and start cgosys menu:
-kill_script = os.path.dirname(__file__) + '/kill_process.py'
+kill_script = cgosys_path + '/kill_process.py'
 kill_button = str(config_dict[device][1])
 kill_proc = subprocess.Popen(['python3', kill_script, kill_button])
 curses.wrapper(cgosys_menu)
