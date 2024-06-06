@@ -1,11 +1,22 @@
 import os
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1' # to make pygame import silent
+import sys
 import pygame
 import subprocess
 
+### Get the command line argument:
+try:
+    kill_button = int(sys.argv[1])
+    flag = True
+except:
+    print('You need to supply a kill button id.')
+    flag = False
+
+### Initiate pygame and find controllers:
 pygame.init()
 controllers = [pygame.joystick.Joystick(i) for i in range(pygame.joystick.get_count())]
 
+### Functions:
 def get_contr_press():
     if len(controllers) > 0:
         controllers[0].init()
@@ -18,9 +29,10 @@ def get_contr_press():
                     return button
     return ''
 
-while True:
+### Loop:
+while flag == True:
     joypress = get_contr_press()
-    if joypress == 7:
+    if joypress == kill_button:
         pidof_proc = subprocess.Popen(['pidof', 'vbam'], stdout = subprocess.PIPE)
         vbam_pid = pidof_proc.stdout.read().decode().replace('\n', '')
         if len(vbam_pid) > 0:
