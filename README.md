@@ -46,3 +46,10 @@ If you get annoying warnings from pygame that you don't want to see you can inst
 ```bash
 python cgosys.py 2> /dev/null
 ```
+
+## Autostart
+It might be desirable to autostart cgosys. In the i3 window manager it can be done by adding the line (change `[user]` to the name of your user):
+```bash
+exec_always i3-sensible-terminal -e 'python /home/[user]/cgosys/cgosys.py'
+```
+To your `~/.config/i3/config` file.
