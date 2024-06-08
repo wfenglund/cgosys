@@ -188,9 +188,5 @@ console_dict['Gameboy Advance'] = [location + '/Rom_files/gba_roms/', '.gba']
 kill_script = cgosys_path + '/kill_process.py'
 kill_button = str(config_dict[device][1])
 kill_proc = subprocess.Popen(['python3', kill_script, kill_button])
-quit_mode = curses.wrapper(cgosys_menu)
+curses.wrapper(cgosys_menu)
 kill_proc.kill()
-
-if quit_mode == 'shutdown':
-    subprocess.Popen(['shutdown', 'now'])
-
