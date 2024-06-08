@@ -192,5 +192,5 @@ quit_mode = curses.wrapper(cgosys_menu)
 kill_proc.kill()
 
 if quit_mode == 'shutdown':
-    subprocess.Popen(['shutdown now'])
+    subprocess.Popen(['shutdown', 'now'])
 
