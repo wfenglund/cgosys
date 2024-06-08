@@ -100,7 +100,7 @@ def cgosys_menu(stdscr):
                 option += 1
         choice = choices[option] # get menu choice
         if choice == 'Quit':
-            break
+            return 'shutdown'
         else:
             console_info = console_dict[choice]
             return curses.wrapper(cgosys_console, console_info)
@@ -188,5 +188,9 @@ console_dict['Gameboy Advance'] = [location + '/Rom_files/gba_roms/', '.gba']
 kill_script = cgosys_path + '/kill_process.py'
 kill_button = str(config_dict[device][1])
 kill_proc = subprocess.Popen(['python3', kill_script, kill_button])
-curses.wrapper(cgosys_menu)
+quit_mode = curses.wrapper(cgosys_menu)
 kill_proc.kill()
+
+if quit_mode == 'shutdown':
+    subprocess.Popen(['shutdown now'])
+
