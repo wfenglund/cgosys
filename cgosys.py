@@ -14,6 +14,9 @@ cgosys_path = os.path.dirname(__file__)
 pygame.init()
 controllers = [pygame.joystick.Joystick(i) for i in range(pygame.joystick.get_count())]
 
+### Determine controller and which settings to use:
+# todo
+
 ### Functions:
 def title_prompt(stdscr):
     prompt_x = (curses.COLS // 2) - (60 // 2)
