@@ -15,7 +15,21 @@ pygame.init()
 controllers = [pygame.joystick.Joystick(i) for i in range(pygame.joystick.get_count())]
 
 ### Determine controller and which settings to use:
-# todo
+controller_dict = {}
+controller_dict['0'] = 'keyboard'
+controller_dict['1'] = 'PowerA_1'
+controller_dict['2'] = 'PowerA_2'
+
+try:
+    settings_choice = int(sys.argv[1])
+    device = controller_dict[settings_choice]
+except:
+    print('You need to set controller, possible alternatives:')
+    print('0: Keyboard')
+    print('1: PowerA 1')
+    print('2: PowerA 2')
+    settings_choice = input('Choose a number: ')
+    device = controller_dict[settings_choice]
 
 ### Functions:
 def title_prompt(stdscr):
@@ -166,10 +180,6 @@ def cgosys_console(stdscr, console_info):
             print(' ' * len(message), end = '\r') # clean away message
 
 ### Determine VBAM settings:
-#device = 'PowerA_1'
-device = 'PowerA_2'
-# device = 'keyboard'
-
 config_dict = {}
 config_dict['PowerA_1'] = [cgosys_path + '/powera_vbam.cfg', 7]
 config_dict['PowerA_2'] = [cgosys_path + '/powera_vbam_2.cfg', 10]
