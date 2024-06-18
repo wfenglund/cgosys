@@ -2,6 +2,7 @@
 import os
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1' # to make pygame import silent
 import pygame
+import sys
 import time
 import subprocess
 import curses
@@ -21,10 +22,12 @@ controller_dict['1'] = 'PowerA_1'
 controller_dict['2'] = 'PowerA_2'
 
 try:
-    settings_choice = int(sys.argv[1])
+    print(sys.argv[1])
+    settings_choice = sys.argv[1]
     device = controller_dict[settings_choice]
 except:
     print('You need to set controller, possible alternatives:')
+    print('\n(This can also be set as a command line argument: $ python cgosys.py 2)\n')
     print('0: Keyboard')
     print('1: PowerA 1')
     print('2: PowerA 2')
